@@ -1,2 +1,4 @@
-# bot_teacher_info2023
- 
+# bot_reg_teacher2023
+# в качестве СУБД использовался sqlitestudio
+# библиотека - pyTeleBotApi
+# в комитах объяснил где хочу добавить код и исправить
