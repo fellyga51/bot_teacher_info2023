@@ -1,9 +1,8 @@
 from aiogram import Bot, Dispatcher, executor, types
 from database import Database
-import telebot
-import sqlite3
+from config import TOKEN
 
-bot = Bot("token")
+bot = Bot(TOKEN)
 dispatcher = Dispatcher(bot)
 
 database = Database()
@@ -11,17 +10,17 @@ database = Database()
 
 @dispatcher.message_handler(commands=['start'])
 async def start(message: types.Message):
-    #проверяем idпользователя на соответствие с id преподователя
+    # проверяем id пользователя на соответствие с id преподователя
     # conn = sqlite3.connect(r 'list.db')
     # cur = conn.cursor()
-    # cur.execute("SELECT teachers_ids FROM list_of_id;")#бд тестовая
+    # cur.execute("SELECT teachers_ids FROM list_of_id;") # бд тестовая
     # all_id = cur.fetchall()
-    # id =list()
+    # id = list()
     # for i in all_id:
     #     id.append(int(i[0]))
     # all_id = id
     # if not(message.chat.id in all_id):
-    #     import igor #в случае несоответствия перенаправляем на интерфейс ученика
+    #     import igor # в случае несоответствия перенаправляем на интерфейс ученика
     await message.answer("добро пожалловать в бота")
 
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
@@ -34,7 +33,8 @@ async def start(message: types.Message):
 
 @dispatcher.message_handler(content_types=["text"])
 #дальше частичная(без бд)реализация интерфейса преподователя
-# async def bot_message(message: types.Message):
+async def bot_message(message: types.Message):
+    pass
 #     if message.text == "да":
 #         markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
 #         btn = types.KeyboardButton("онлайн")
@@ -48,6 +48,7 @@ async def start(message: types.Message):
 #         btn = types.KeyboardButton("офлайн")
 #         markup.add(btn)
 #         await message.answer("на линии", reply_markup=markup)
-#дальше следует соединение с преподователя
+# дальше следует соединение с преподователя
 
-executor.start_polling(dispatcher)
+if __name__ == "__main__":
+    executor.start_polling(dispatcher)
