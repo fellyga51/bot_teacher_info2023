@@ -38,7 +38,7 @@ async def bot_file(message: types.Message):
     if is_teacher:
         global file_id_solution
         file_id_solution = message.photo[0].file_id
-        database.add_solution(task_id, file_id_solution)
+        database.add_solution(task_id, file_id_solution, message.from_user.id)
         markup = types.ReplyKeyboardRemove()
         await bot.send_photo(tg_client_id, file_id_solution, reply_markup=markup)
     else:
