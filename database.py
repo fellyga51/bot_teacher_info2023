@@ -29,3 +29,7 @@ class Database:
             tasks = self.cursor.execute("SELECT * FROM `task` WHERE subject = ? AND grade = ?", (subject, grade))
             for i in tasks:
                 return [i[0], i[1], i[2], i[3], i[4], i[5], i[6], i[7]]
+
+    def add_solution(self, task_id, file_id):  # запись предмета задания в БД
+        with self.connection:
+            res =  self.cursor.execute(f"UPDATE {ta} SET urlfile_solution = ? WHERE id = ?", (file_id, task_id))
