@@ -36,12 +36,14 @@ async def start(message: types.Message):
 async def bot_file(message: types.Message):
     is_teacher = database.check_teacher(message.from_user.id)
     if is_teacher:
-        pass
+        global file_id_solution
+        file_id_solution = message.photo[0].file_id
+        database.add_solution(task_id, file_id_solution)
+        markup = types.ReplyKeyboardRemove()
+        await bot.send_photo(tg_client_id, file_id_solution, reply_markup=markup)
     else:
         global file_id
         file_id = message.photo[0].file_id
-        markup = types.ReplyKeyboardRemove()
-        await message.answer(file_id, reply_markup=markup)
         await Form.subject.set()
 
         markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
@@ -68,8 +70,10 @@ async def bot_message(message: types.Message):
             grade = info[5]
             task = database.get_task(subject, grade)
             print(task)
+            global task_id, tg_client_id
             task_id = task[0]
             file_id = task[3]
+            tg_client_id = task[6]
             # тут вывод сообщения о задании
             markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
             btn1 = types.KeyboardButton("Принять")
