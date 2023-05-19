@@ -1,46 +1,31 @@
 import sqlite3
 
+s = "subject"
+ta = "task"
+te = "teacher"
 
 class Database:
-    def __init__(self):
-        self.connection = sqlite3.connect("database.db")
+    def __init__(self): # подключение к БД
+        self.connection = sqlite3.connect("../database.db")
         self.cursor = self.connection.cursor()
 
-    def add_queue(self, user_id):
+    def check_teacher(self, tg_id): # проверка наличия преподователя в БД
         with self.connection:
-            return self.cursor.execute("INSERT INTO `queue` (user_id) VALUES (?)", (user_id,))
-
-    def delete_queue(self, user_id):
+            res = self.cursor.execute("SELECT (tg_id) FROM `teacher` WHERE tg_id = ?", (tg_id,))
+            return res.fetchone() is not None
+    
+    def get_teacher_info(self, tg_id):
         with self.connection:
-            return self.cursor.execute("DELETE FROM `queue` WHERE user_id = ?", (user_id,))
+            info = self.cursor.execute("SELECT * FROM `teacher` WHERE tg_id = ?", (tg_id,))
+            for i in info:
+                return [i[0], i[1], i[2], i[3], i[4], i[5]]
 
-    def get_queue(self):
+    def add_task(self, subject, grade, file_id, tg_client_id):  # запись предмета задания в БД
         with self.connection:
-            queue = self.cursor.execute("SELECT * FROM `queue`").fetchmany(1)
+            return self.cursor.execute(f"INSERT INTO {ta} (subject, grade, urlfile_task, tg_client_id) VALUES (?, ?, ?, ?)", (subject, grade, file_id, tg_client_id))
 
-            if bool(len(queue)):
-                for row in queue:
-                    return row[1]
-            else:
-                return False
-
-    def create_chat(self, user_id, partner_id):
-        if partner_id != 0:
-            with self.connection:
-                self.cursor.execute("INSERT INTO `chats` (user, partner) VALUES (?, ?)", (user_id, partner_id))
-                return True
-
-        return False
-
-    def get_chat(self, user_id):
+    def get_task(self, subject, grade):
         with self.connection:
-            chat = self.cursor.execute("SELECT * FROM `chats` WHERE user = ? OR partner = ?", (user_id, user_id))
-
-            for i in chat:
-                return [i[0], i[1] if i[1] != user_id else i[2]]
-
-            return False
-
-    def delete_chat(self, user_id):
-        with self.connection:
-            return self.cursor.execute("DELETE FROM `chats` WHERE user = ? OR partner = ?", (user_id, user_id))
+            tasks = self.cursor.execute("SELECT * FROM `task` WHERE subject = ? AND grade = ?", (subject, grade))
+            for i in tasks:
+                return [i[0], i[1], i[2], i[3], i[4], i[5], i[6], i[7]]
