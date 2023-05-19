@@ -30,6 +30,6 @@ class Database:
             for i in tasks:
                 return [i[0], i[1], i[2], i[3], i[4], i[5], i[6], i[7]]
 
-    def add_solution(self, task_id, file_id):  # запись предмета задания в БД
+    def add_solution(self, task_id, file_id, teacher_id):  # запись предмета задания в БД
         with self.connection:
-            res =  self.cursor.execute(f"UPDATE {ta} SET urlfile_solution = ? WHERE id = ?", (file_id, task_id))
+            res =  self.cursor.execute(f"UPDATE {ta} SET urlfile_solution = ?, teacher_id = ? WHERE id = ?", (file_id, teacher_id, task_id))
